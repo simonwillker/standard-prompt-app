@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "template": {
+    "id": "requirement-extract",
+    "name": "需求条目提取",
+    "version": "1.0.0",
+    "category": "文书",
+    "tags": [
+      "标准化"
+    ],
+    "description": "把用户提供的业务内容整理为可复用的固定结构"
+  },
+  "prompt": {
+    "role": "严谨的业务文书助手",
+    "task": "从输入中提取需求条目，使用 {{output_language}} 输出",
+    "input_spec": "用户提供的业务文本；不要添加原文没有的事实",
+    "variables": [
+      {
+        "key": "content",
+        "label": "输入正文",
+        "type": "textarea",
+        "placement": "input",
+        "required": true
+      },
+      {
+        "key": "output_language",
+        "label": "输出语言",
+        "type": "select",
+        "placement": "inline",
+        "required": true,
+        "default": "zh-CN",
+        "options": [
+          "zh-CN",
+          "ja-JP",
+          "en-US"
+        ]
+      }
+    ],
+    "output": {
+      "type": "json",
+      "schema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requirements"
+        ],
+        "properties": {
+          "requirements": {
+            "description": "从原文提取的需求条目",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "examples": [],
+    "constraints": [
+      "不添加输入中没有的事实",
+      "保留重要的人名、日期和业务条件"
+    ],
+    "missing_info": {
+      "policy": "mark_unknown",
+      "value": "不明"
+    }
+  },
+  "metadata": {
+    "created_at": "2026-10-03",
+    "updated_at": "2026-10-03"
+  }
+}
