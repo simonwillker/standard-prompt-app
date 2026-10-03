@@ -1,6 +1,6 @@
-# 标准Prompt模板APP 仕様书（v0.2 草案）
+# 标准Prompt模板APP 仕様书（v0.3 草案）
 
-- 文档状态：草案 v0.2，待评审（v0.2：交付形态改为插件）
+- 文档状态：草案 v0.3，待评审（v0.2：交付形态改为插件；v0.3：对象平台为 Claude 和 ChatGPT）
 - 作成日：2026-10-03
 - 依赖者：Zhang
 
@@ -148,53 +148,79 @@ created_at: 2026-10-03
 updated_at: 2026-10-03
 ```
 
-## 7. 交付形态：插件
+## 7. 交付形态：插件（Claude + ChatGPT）
 
-最终以**插件（Plug-in）**形式交付，装进 AI 工具后即可使用，不需要单独打开一个APP。
+最终以**插件**形式交付，装进 AI 工具后即可使用，不需要单独打开一个APP。对象平台为 **Claude** 和 **ChatGPT** 两个。
 
-### 7.1 目标平台（默认）
+### 7.1 设计方针：一份核心，两个适配
 
-- **Claude 插件**（Claude Code / Cowork 通用的插件格式），通过 Git 仓库作为插件市场分发，安装后在对话中直接调用。
-- 选择理由：模板是纯文本文件，与插件格式天然契合；安装、更新、团队共享都通过 Git 完成。
+两个平台的插件机制不同，但"模板"和"生成规则"是共用的。因此分为两层：
 
-### 7.2 插件构成
+| 层 | 内容 | 说明 |
+|----|------|------|
+| 核心（共用） | `core/rules.md` 生成规则、`templates/*.yaml` 模板库 | 只维护一份，两个平台读取同一套内容，保证输出一致 |
+| 适配（各平台） | `claude-plugin/`、`chatgpt/` | 把核心内容包装成各平台能安装的形式 |
+
+修改模板或规则时只改核心，再用构建脚本（`scripts/build`）生成两个平台的发布物，避免两边内容不一致。
+
+### 7.2 仓库构成
 
 ```
 standard-prompt-app/
-├── .claude-plugin/
-│   ├── plugin.json          # 插件元信息（名称、版本、说明）
-│   └── marketplace.json     # 让本仓库可作为插件市场被添加
-├── skills/
-│   └── standard-prompt/
-│       └── SKILL.md         # 核心：按第5章结构生成标准Prompt的规则
-├── commands/
-│   ├── prompt-new.md        # /prompt-new   新建模板（引导填写各要素）
-│   ├── prompt-use.md        # /prompt-use   选择模板、填变量、生成Prompt
-│   ├── prompt-list.md       # /prompt-list  模板一览/检索
-│   └── prompt-check.md      # /prompt-check 质量检查
-├── templates/               # 模板库（YAML，第6章格式）
+├── core/
+│   └── rules.md                 # 生成规则：第5章结构、质量检查、信息不足处理
+├── templates/                   # 模板库（第6章 YAML 格式）
 │   └── meeting-minutes.yaml
+├── claude-plugin/               # Claude 适配
+│   ├── .claude-plugin/plugin.json
+│   ├── skills/standard-prompt/SKILL.md
+│   └── commands/                # /prompt-new /prompt-use /prompt-list /prompt-check
+├── chatgpt/                     # ChatGPT 适配
+│   ├── instructions.md          # GPT 的 Instructions（由 core/rules.md 生成）
+│   ├── conversation-starters.md # 对话开场按钮：新建模板 / 使用模板 / 模板一览 / 质量检查
+│   └── knowledge/               # 上传为 Knowledge 的模板文件
+├── .claude-plugin/marketplace.json  # 让本仓库可作为 Claude 插件市场被添加
+├── scripts/build                # 由核心生成两个平台的发布物
 └── docs/spec.md
 ```
 
-### 7.3 使用流程
+### 7.3 Claude 插件
 
-1. 安装：在 Claude 中添加本仓库为插件市场 → 安装插件。
-2. 新建模板：`/prompt-new` → Claude 逐项询问角色、任务、输出格式等 → 保存为 `templates/*.yaml`。
-3. 使用模板：`/prompt-use 会议纪要` → 只输入变量 → 输出标准Prompt（或直接按该Prompt执行）。
-4. 更新：模板修改后提交到 Git，团队成员更新插件即可同步。
+- 形式：Claude 插件（Claude Code / Cowork 通用），本仓库作为插件市场分发。
+- 安装：在 Claude 中添加本仓库为插件市场 → 安装 `standard-prompt` 插件。
+- 使用：
+  - `/prompt-new` 对话式逐项填写各要素 → 保存为模板
+  - `/prompt-use 会议纪要` 填变量 → 输出标准Prompt，或直接执行
+  - `/prompt-list` 模板一览 / 检索
+  - `/prompt-check` 质量检查
+- 模板保存：写入 `templates/`，通过 Git 提交共享。
 
-### 7.4 功能与插件的对应
+### 7.4 ChatGPT（自定义 GPT）
 
-| 功能 | 插件中的实现 |
-|------|-------------|
-| F-01 需求输入表单 | `/prompt-new` 对话式逐项填写 |
-| F-02 Prompt生成 | `standard-prompt` 技能按固定结构拼装 |
-| F-03/F-04 保存、一览 | `templates/` 目录 + `/prompt-list` |
-| F-05 变量 | `/prompt-use` 时填写 `{{变量}}` |
-| F-06 导入导出 | 模板即文件，直接复制或通过 Git |
-| F-07 质量检查 | `/prompt-check` |
-| F-12/F-13 执行与校验 | 插件内直接执行，按 output_schema 校验，不合格重试 |
+- 形式：**自定义 GPT（GPTs）**。Instructions 写入生成规则，Knowledge 上传模板文件，Conversation starters 提供四个入口（对应 Claude 的四个命令）。
+- 安装：在 ChatGPT「探索 GPT → 创建」中粘贴 `chatgpt/instructions.md`、上传 `chatgpt/knowledge/` 内文件；之后通过链接分享给团队。
+- 使用：选择开场按钮或直接说「用会议纪要模板」→ 填变量 → 输出标准Prompt。
+- 限制：GPT 不能把新模板写回 Git。`新建模板` 时由 GPT 输出 YAML，用户复制保存到 `templates/` 后重新构建、重新上传 Knowledge。
+- 第二阶段可选：做成 **ChatGPT App**（Apps SDK，基于 MCP 服务器），实现模板的在线读写。届时同一个 MCP 服务器也可以挂到 Claude 上，两边共用一个模板库。
+
+### 7.5 功能与平台对应
+
+| 功能 | Claude 插件 | ChatGPT（GPT） |
+|------|------------|----------------|
+| F-01 需求输入 | `/prompt-new` 对话式填写 | 开场按钮「新建模板」 |
+| F-02 Prompt生成 | `standard-prompt` 技能 | Instructions 中的生成规则 |
+| F-03 模板保存 | 直接写入 `templates/` | 输出 YAML，用户手动保存 |
+| F-04 一览/检索 | `/prompt-list` | 开场按钮「模板一览」（读 Knowledge） |
+| F-05 变量 | `/prompt-use` | 对话中填写 |
+| F-06 导入导出 | 模板即文件 / Git | 上传 Knowledge |
+| F-07 质量检查 | `/prompt-check` | 开场按钮「质量检查」 |
+| F-12/F-13 执行与校验 | 插件内直接执行并校验 | GPT 内直接执行并按格式自检 |
+
+### 7.6 一致性的注意点
+
+两个平台的插件都**不能指定 temperature 和模型版本**（由平台决定）。插件形态下的一致性靠：固定的Prompt结构、明确的输出格式/模板、示例、输出前自检（按 output_format 逐项核对，不符合则重写）。第6章 `run` 参数仅在通过 API 调用时生效。
+
+另外，Claude 和 ChatGPT 的模型不同，同一模板在两边的输出**结构相同，但措辞不会逐字相同**。如需跨平台逐字一致，只能通过 API 固定同一个模型调用。
 
 ## 8. 非功能需求
 
@@ -205,11 +231,12 @@ standard-prompt-app/
 
 ## 9. 技术方案（建议，待确认）
 
-- 形态：Claude 插件（见第7章）
-- 实现：技能（SKILL.md）+ 斜杠命令（Markdown）+ 模板文件（YAML），基本不需要编写程序代码
+- 形态：Claude 插件 + ChatGPT 自定义 GPT（见第7章）
+- 实现：共用核心（规则 Markdown + 模板 YAML）+ 各平台适配文件，基本不需要编写程序代码
+- 构建：`scripts/build` 由核心生成两个平台的发布物（Python 或 Node 小脚本）
 - 数据：模板存放在插件仓库的 `templates/` 目录，用 Git 做版本管理
 - 校验（第二阶段）：如需严格的 JSON Schema 校验，追加一个小脚本或 hook
-- 备选：如果需要在 Claude 以外使用（如 VS Code、浏览器扩展），再追加对应形态的插件
+- 第二阶段：如需模板在线读写，追加一个 MCP 服务器，供 ChatGPT App 和 Claude 共用
 
 ## 10. 不在本期范围
 
@@ -219,7 +246,7 @@ standard-prompt-app/
 
 ## 11. 待确认事项
 
-1. 插件平台：Claude 插件（Claude Code / Cowork）是否合适？还是指其他工具的插件（VS Code、浏览器扩展等）？
+1. ChatGPT 侧第一版用「自定义 GPT」是否可以？（需要 ChatGPT Plus 以上账号创建；在线读写模板的 ChatGPT App 放到第二阶段）
 2. MVP 是否在插件内直接按生成的Prompt执行（F-12），还是只输出Prompt？
 3. 主要使用语言：中文为主，是否需要日文？
 4. 首批需要内置哪些模板（例：会议纪要、邮件起草、需求整理、代码评审…）？
@@ -230,7 +257,8 @@ standard-prompt-app/
 | 阶段 | 内容 |
 |------|------|
 | 1 | 仕様书评审、确定待确认事项 |
-| 2 | 插件骨架 + MVP 开发（F-01〜F-07） |
+| 2 | 核心（规则 + 模板）+ Claude 插件 MVP（F-01〜F-07） |
+| 2.5 | ChatGPT 自定义 GPT 适配 + 构建脚本 |
 | 3 | 内置模板 3〜5 个，试用与调整 |
 | 4 | 第二阶段功能（F-11〜F-16） |
-| 5 | 插件发布（作为插件市场分发，安装说明写入 README） |
+| 5 | 发布：Claude 插件市场 + 分享 GPT 链接，安装说明写入 README |
