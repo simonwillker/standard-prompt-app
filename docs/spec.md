@@ -223,7 +223,7 @@
 - `placement: inline` 的变量必须至少被引用一次，否则校验报 Error。
 - 文本中引用了未定义的 `{{key}}` 时报 Error。
 - `inline` 仅用于模板作者定义的控制参数，允许 `select / number / boolean / date`；自由文本 `text / textarea` 必须使用 `input`。`select` 的 options 必须是经过模板评审的非空字符串，最多 100 个 Unicode 码点，不含换行或 `<` `>` `{` `}`；运行时仅接受精确匹配的选项。`number` 必须声明有限的 `minimum` 和 `maximum`，且 minimum ≤ maximum；运行时检查范围。
-- 引用仅支持 role、task、input_spec、Markdown/Text 的 output.template、字符串形式的 examples.input / examples.output 和 constraints。JSON Schema、结构化 JSON 示例、label、missing_info.value 及元数据中禁止变量占位符。替换仅执行一次，使用回调插入原始序列化值，避免 `- `inline` 变量只允许 `select / number / boolean / date`，以及 `text`（最多 100 字、不含换行、不含 `<` `>` `{` `}`），`textarea` 不允许 `inline`。` 等替换字符串语义。
+- 引用仅支持 role、task、input_spec、Markdown/Text 的 output.template、字符串形式的 examples.input / examples.output 和 constraints。JSON Schema、结构化 JSON 示例、label、missing_info.value 及元数据中禁止变量占位符。替换仅执行一次，使用回调插入原始序列化值，避免 `$&` 等替换字符串语义。
 - 变量值中的 `{{...}}` 只作为普通文本，不做二次展开。
 - 至少要有 1 个 `placement: input` 的变量；默认值处理后，运行时至少有 1 个有效输入区块，否则报 `NO_INPUT_DATA`。label 必须为非空单行文本，不含 `<` `>`，最多 100 个 Unicode 码点。
 

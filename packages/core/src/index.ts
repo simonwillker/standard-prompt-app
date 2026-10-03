@@ -1,4 +1,4 @@
-import Ajv2020 from "ajv/dist/2020.js";
+import { Ajv2020 } from "ajv/dist/2020.js";
 import { parseDocument, isAlias, isMap, isSeq, isScalar } from "yaml";
 import schema from "./schema.js";
 import type { Template, Variable, Issue } from "./types.js";
@@ -17,11 +17,17 @@ const pointer = (s: string) => s.replace(/~/g, "~0").replace(/\//g, "~1");
 export function importTemplate(content: string, format: "yaml" | "json"): unknown {
   if (Buffer.byteLength(content, "utf8") > LIMIT) throw new Error("IMPORT_LIMIT_EXCEEDED");
   const normalized = normalizeText(content);
-  if (format === "json") JSON.parse(normalized); // Reject YAML-only syntax in JSON mode.
-  const doc = parseDocument(normalized, {
+  // Parsers recurse per nesting level; a stack overflow means the depth limit was exceeded.
+  const guard = <T>(parse: () => T): T => {
+    try { return parse(); }
+    catch (error) { throw new Error(error instanceof RangeError ? "IMPORT_LIMIT_EXCEEDED" : "PARSE_ERROR"); }
+  };
+  if (format === "json") guard(() => JSON.parse(normalized)); // Reject YAML-only syntax in JSON mode.
+  // logLevel "silent" would also drop MULTIPLE_DOCS, letting a second document be ignored.
+  const doc = guard(() => parseDocument(normalized, {
     version: "1.2", schema: "core", uniqueKeys: true, stringKeys: true,
-    customTags: [], prettyErrors: false, logLevel: "silent"
-  });
+    customTags: [], prettyErrors: false, logLevel: "error"
+  }));
   if (doc.errors.length || doc.warnings.length || (doc.directives?.yaml.explicit && doc.directives?.yaml.version !== "1.2")) throw new Error("PARSE_ERROR");
   function check(node: any, depth: number): void {
     if (depth > 64) throw new Error("IMPORT_LIMIT_EXCEEDED");

@@ -2,10 +2,10 @@
 
 本分支按 v0.6 规格实现首个开发阶段：安全模板导入、Schema 与语义校验、确定性序列化、Prompt 渲染、三种内置模板和命令行入口。
 
-**验证状态：尚未执行。** 提交时本地命令和备用 Node 运行环境均无法启动。测试代码已提供，但不能把它视为测试通过或可发布的 MVP。依赖安装完成后，先运行：
+**验证状态：** `npm run check` 和 `npm test` 已通过，并由 GitHub Actions 在 Windows / macOS / Linux 上运行（Node 20、22）。这只覆盖核心与 CLI，不代表可发布的 MVP。本地验证命令：
 
 ```text
-npm install
+npm ci
 npm run check
 npm test
 npm run list
@@ -21,4 +21,4 @@ npm run render -- --template templates/meeting-minutes.yaml --vars-file examples
 - MCP 四个工具与精确版本读取，错误码及返回值契约。
 - 两个平台最小插件安装及本地 MCP 调用验证。
 - 所有 Error/Warning 的逐项用例、golden 文件、跨系统测试。
-- 锁定依赖、生成 Schema 副本的构建步骤、单文件 CLI/MCP 包。
+- 生成 Schema 副本的构建步骤、单文件 CLI/MCP 包。

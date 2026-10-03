@@ -31,6 +31,13 @@ test("import rejects duplicate keys, aliases, explicit tags, merge keys and larg
   for (const s of ["a: 1\na: 2", "a: &x 1\nb: *x", "a: !!str x", "a: {<<: {x: 1}}", "---\na: 1\n---\nb: 2"]) assert.throws(() => importTemplate(s, "yaml"));
   assert.throws(() => importTemplate('{"a":1,"a":2}', "json"));
   assert.throws(() => importTemplate("x".repeat(1024 * 1024 + 1), "yaml"), /IMPORT_LIMIT_EXCEEDED/);
+  for (const s of ["a: 1\n...\nb: 2", "a: 1\n--- \nb: 2"]) assert.throws(() => importTemplate(s, "yaml"), /PARSE_ERROR/);
+  const deep = "[".repeat(100000) + "]".repeat(100000);
+  for (const format of ["yaml", "json"] as const) {
+    assert.throws(() => importTemplate(deep, format), /IMPORT_LIMIT_EXCEEDED/);
+    assert.deepEqual(validateTemplate(deep, format).errors.map(e => e.code), ["IMPORT_LIMIT_EXCEEDED"]);
+  }
+  assert.throws(() => importTemplate("[".repeat(66) + "]".repeat(66), "yaml"), /IMPORT_LIMIT_EXCEEDED/);
 });
 test("all three templates validate and render", async () => {
   for (const id of ["meeting-minutes", "email-reply", "requirement-extract"]) {
