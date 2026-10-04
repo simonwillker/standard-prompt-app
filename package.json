@@ -8,11 +8,11 @@
   },
   "scripts": {
     "check": "tsc --noEmit",
-    "test": "tsx --test tests/*.test.ts",
+    "test": "tsx --test tests/core.test.ts tests/registry.test.ts tests/golden.test.ts tests/mcp.test.ts",
     "list": "tsx packages/cli/src/index.ts list",
     "render": "tsx packages/cli/src/index.ts render",
     "validate": "tsx packages/cli/src/index.ts validate",
-    "golden:update": "UPDATE_GOLDEN=1 tsx --test tests/golden.test.ts",
+    "golden:update": "tsx scripts/golden-update.ts",
     "publish-template": "tsx scripts/publish.ts",
     "check-registry": "tsx scripts/check-registry.ts",
     "build": "tsx scripts/build.ts",
