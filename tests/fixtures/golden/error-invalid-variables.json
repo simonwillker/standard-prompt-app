@@ -1,0 +1,6 @@
+{
+  "template_file": "multi-input.yaml",
+  "request": {
+    "variables": { "diff": "x", "max_items": 21, "due_date": "2026-02-29", "strict": "true", "unknown": 1 }
+  }
+}

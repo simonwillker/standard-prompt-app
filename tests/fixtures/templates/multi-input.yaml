@@ -1,0 +1,68 @@
+schema_version: 1
+template:
+  id: code-review-notes
+  name: 代码评审意见
+  category: 开发
+  tags: [代码, 评审]
+  version: 0.1.0
+  description: 用于测试多输入区块和多种 inline 类型的未发布模板
+prompt:
+  role: 资深代码评审员
+  task: "评审输入中的代码改动，最多列出 {{max_items}} 条意见，截止日期为 {{due_date}}，严格模式：{{strict}}"
+  input_spec: 代码改动和相关说明，可能不完整
+  variables:
+    - key: diff
+      label: 代码改动
+      type: textarea
+      placement: input
+      required: true
+    - key: context
+      label: 背景说明
+      type: textarea
+      placement: input
+      required: false
+    - key: ticket
+      label: 工单编号
+      type: text
+      placement: input
+      required: false
+      default: 未提供
+    - key: max_items
+      label: 意见条数上限
+      type: number
+      placement: inline
+      required: true
+      default: 5
+      minimum: 0
+      maximum: 20
+    - key: due_date
+      label: 截止日期
+      type: date
+      placement: inline
+      required: true
+      default: "2026-12-31"
+    - key: strict
+      label: 严格模式
+      type: boolean
+      placement: inline
+      required: true
+      default: false
+  output:
+    type: markdown
+    template: |
+      ## 总体评价
+
+      ## 意见（最多 {{max_items}} 条）
+      1.
+  examples:
+    - input: "删除了空值检查"
+      output: |
+        ## 总体评价
+        存在回归风险
+
+        ## 意见（最多 {{max_items}} 条）
+        1. 恢复空值检查
+  constraints:
+    - 不评价代码风格以外的个人偏好
+  missing_info:
+    policy: ask

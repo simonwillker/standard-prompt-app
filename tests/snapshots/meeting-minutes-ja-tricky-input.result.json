@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "prompt_sha256": "2fd935af882314efed77eb3c811e473be9401c8707e7815f187a4856904e3ad5",
+  "renderer_version": "0.1.0",
+  "template": {
+    "id": "meeting-minutes",
+    "version": "1.0.0",
+    "source": "registry",
+    "content_sha256": "0957c6c7cc8c28a8abb4db3203c6713d7cf3d8d7a124a82dd38fed523d802cbf"
+  },
+  "warnings": [
+    {
+      "code": "NO_EXAMPLES",
+      "path": "/prompt/examples",
+      "message": "建议提供示例"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "template_file": "multi-input.yaml",
+  "request": {
+    "template_ref": { "id": "meeting-minutes", "version": "1.0.0" },
+    "variables": { "diff": "x" }
+  }
+}

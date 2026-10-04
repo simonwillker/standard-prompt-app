@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "prompt_sha256": "70fc6c220502f639f6cb31b701d609c0704354b36741895cf0953c3d3de11f61",
+  "renderer_version": "0.1.0",
+  "template": {
+    "id": "email-reply",
+    "version": "1.0.0",
+    "source": "registry",
+    "content_sha256": "0d7754c409b640656852582d4eb1fdaee7c7c41ab10815742e0db456527c96f0"
+  },
+  "warnings": [
+    {
+      "code": "NO_EXAMPLES",
+      "path": "/prompt/examples",
+      "message": "建议提供示例"
+    }
+  ]
+}

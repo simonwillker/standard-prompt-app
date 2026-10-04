@@ -4,4 +4,4 @@
 
 - 仕様书：[docs/spec.md](docs/spec.md)（v0.6 草案，已修订评审问题；平台验证待完成）
 - 交付形态：Claude 插件 + ChatGPT 插件（共用核心规则与模板）
-- 状态：核心渲染器与 CLI 已实现（见 [docs/development.md](docs/development.md)）；MCP 服务与两个插件尚未实现
+- 状态：核心渲染器、CLI、已发布模板注册表、MCP 服务器、Claude 插件和 ChatGPT（Codex）插件已实现；安装与开发说明见 [docs/development.md](docs/development.md)

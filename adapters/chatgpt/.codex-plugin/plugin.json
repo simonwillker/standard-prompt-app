@@ -1,0 +1,16 @@
+{
+  "name": "standard-prompt",
+  "version": "0.1.0",
+  "description": "用标准模板生成逐字可复现的 Prompt：列出模板、收集变量、校验模板、调用共用渲染器生成 Prompt。",
+  "author": { "name": "Zhang" },
+  "repository": "https://github.com/simonwillker/standard-prompt-app",
+  "keywords": ["prompt", "template", "standardization"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Standard Prompt",
+    "shortDescription": "用标准模板生成可复现的 Prompt",
+    "developerName": "Zhang",
+    "category": "Productivity"
+  }
+}

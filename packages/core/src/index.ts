@@ -5,6 +5,7 @@ import type { Template, Variable, Issue } from "./types.js";
 import { canonicalJSON, decimal, hash, missing, normalizeText, rendererVersion, validDate } from "./serialize.js";
 export * from "./types.js";
 export * from "./serialize.js";
+export * from "./registry.js";
 
 const ajv = new Ajv2020({ allErrors: true, strict: false, validateFormats: false });
 const schemaValidator = ajv.compile(schema);
@@ -157,7 +158,7 @@ export function validateTemplate(content: string, format: "yaml" | "json" = "yam
   return { valid: errors.length === 0, errors, warnings, ...(errors.length ? {} : { definition: t }) };
 }
 
-export function renderTemplate(content: string, format: "yaml" | "json", values: Record<string, unknown>) {
+export function renderTemplate(content: string, format: "yaml" | "json", values: Record<string, unknown>, source: "registry" | "provided" = "provided") {
   const result = validateTemplate(content, format);
   if (!result.valid || !result.definition) return { ok: false as const, errors: result.errors, warnings: result.warnings };
   const t = result.definition, p = t.prompt, errors: Issue[] = [];
@@ -209,5 +210,5 @@ export function renderTemplate(content: string, format: "yaml" | "json", values:
   const prompt = sections.join("\n\n").replace(/\n*$/, "\n");
   if (Buffer.byteLength(prompt, "utf8") > LIMIT * 2) return { ok: false as const, errors: [issue("IMPORT_LIMIT_EXCEEDED")], warnings: result.warnings };
   return { ok: true as const, prompt, prompt_sha256: hash(prompt), renderer_version: rendererVersion,
-    template: { id: t.template.id, version: t.template.version, source: "provided" as const, content_sha256: hash(canonicalJSON(t)) }, warnings: result.warnings };
+    template: { id: t.template.id, version: t.template.version, source, content_sha256: hash(canonicalJSON(t)) }, warnings: result.warnings };
 }

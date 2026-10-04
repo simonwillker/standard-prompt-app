@@ -1,0 +1,6 @@
+{
+  "request": {
+    "template_ref": { "id": "email-reply", "version": "1.0.0" },
+    "variables": { "content": "您好，请问上周订购的 200 台设备什么时候发货？——李华", "output_language": "en-US" }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "code": "VARIABLE_REQUIRED",
+      "path": "/variables/content",
+      "message": "必填变量未填写"
+    },
+    {
+      "code": "NO_INPUT_DATA",
+      "path": "/variables",
+      "message": "至少需要一个有效输入"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "NO_EXAMPLES",
+      "path": "/prompt/examples",
+      "message": "建议提供示例"
+    }
+  ]
+}

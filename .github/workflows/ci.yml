@@ -22,5 +22,43 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm test
+      - run: npm run build -- --check
       - run: npm run validate -- templates/meeting-minutes.yaml
-      - run: npm run render -- --template templates/meeting-minutes.yaml --vars-file examples/meeting-input.json
+      - run: npm run render -- meeting-minutes --version 1.0.0 --vars-file examples/meeting-input.json
+
+  registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Published template versions must never change once they are on main.
+      - run: npm run check-registry -- ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || 'HEAD~1' }}
+
+  # Installs both plugins into real hosts from this repository and has a scripted mock model call render_prompt.
+  hosts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm install --prefix "$RUNNER_TEMP/hosts" @anthropic-ai/claude-code@2.1.289 @openai/codex@0.160.0
+      - run: npm run host-e2e
+        env:
+          CLAUDE_BIN: ${{ runner.temp }}/hosts/node_modules/@anthropic-ai/claude-code/bin/claude.exe
+          CODEX_BIN: ${{ runner.temp }}/hosts/node_modules/@openai/codex/bin/codex.js

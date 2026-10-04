@@ -1,0 +1,13 @@
+{
+  "name": "standard-prompt-app",
+  "owner": { "name": "Zhang" },
+  "metadata": { "description": "标准 Prompt 模板插件市场" },
+  "plugins": [
+    {
+      "name": "standard-prompt",
+      "source": "./adapters/claude",
+      "description": "用标准模板生成逐字可复现的 Prompt",
+      "version": "0.1.0"
+    }
+  ]
+}

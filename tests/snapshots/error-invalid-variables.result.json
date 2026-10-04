@@ -1,0 +1,26 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "code": "VARIABLE_INVALID",
+      "path": "/variables/unknown",
+      "message": "未知变量"
+    },
+    {
+      "code": "VARIABLE_INVALID",
+      "path": "/variables/max_items",
+      "message": "变量类型或范围不符合要求"
+    },
+    {
+      "code": "VARIABLE_INVALID",
+      "path": "/variables/due_date",
+      "message": "变量类型或范围不符合要求"
+    },
+    {
+      "code": "VARIABLE_INVALID",
+      "path": "/variables/strict",
+      "message": "变量类型或范围不符合要求"
+    }
+  ],
+  "warnings": []
+}

@@ -1,0 +1,6 @@
+{
+  "template_file": "multi-input.yaml",
+  "request": {
+    "variables": { "diff": "- if (x == null) return;\n+ // removed", "context": "修复启动慢的问题", "max_items": 1e-7, "strict": true }
+  }
+}

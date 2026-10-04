@@ -1,0 +1,11 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "code": "INVALID_TEMPLATE_SOURCE",
+      "path": "",
+      "message": "必须且只能提供 template_ref 或 template_source 之一"
+    }
+  ],
+  "warnings": []
+}

@@ -8,17 +8,26 @@
   },
   "scripts": {
     "check": "tsc --noEmit",
-    "test": "tsx --test tests/core.test.ts",
+    "test": "tsx --test tests/core.test.ts tests/registry.test.ts tests/golden.test.ts tests/mcp.test.ts",
     "list": "tsx packages/cli/src/index.ts list",
     "render": "tsx packages/cli/src/index.ts render",
-    "validate": "tsx packages/cli/src/index.ts validate"
+    "validate": "tsx packages/cli/src/index.ts validate",
+    "golden:update": "tsx scripts/golden-update.ts",
+    "publish-template": "tsx scripts/publish.ts",
+    "check-registry": "tsx scripts/check-registry.ts",
+    "build": "tsx scripts/build.ts",
+    "mcp": "tsx packages/mcp/src/main.ts",
+    "host-e2e": "tsx scripts/host-e2e.ts"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.0",
     "ajv": "8.17.1",
-    "yaml": "2.8.1"
+    "yaml": "2.8.1",
+    "zod": "4.6.5"
   },
   "devDependencies": {
     "@types/node": "22.10.2",
+    "esbuild": "0.28.2",
     "tsx": "4.19.2",
     "typescript": "5.7.2"
   }
