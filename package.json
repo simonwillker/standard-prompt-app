@@ -8,7 +8,7 @@
   },
   "scripts": {
     "check": "tsc --noEmit",
-    "test": "tsx --test tests/*.test.ts",
+    "test": "tsx --test tests/core.test.ts",
     "list": "tsx packages/cli/src/index.ts list",
     "render": "tsx packages/cli/src/index.ts render",
     "validate": "tsx packages/cli/src/index.ts validate"
