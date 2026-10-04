@@ -1,0 +1,6 @@
+{
+  "request": {
+    "template_ref": { "id": "meeting-minutes", "version": "2.0.0" },
+    "variables": { "content": "x" }
+  }
+}

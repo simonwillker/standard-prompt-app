@@ -1,0 +1,11 @@
+{
+  "ok": false,
+  "errors": [
+    {
+      "code": "TEMPLATE_NOT_FOUND",
+      "path": "/template_ref",
+      "message": "未找到已发布的模板版本"
+    }
+  ],
+  "warnings": []
+}

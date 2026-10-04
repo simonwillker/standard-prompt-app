@@ -1,0 +1,6 @@
+{
+  "template_file": "multi-input.yaml",
+  "request": {
+    "variables": { "diff": "x = 1", "context": "  \r\n ", "max_items": 20 }
+  }
+}

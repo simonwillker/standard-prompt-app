@@ -1,0 +1,6 @@
+{
+  "request": {
+    "template_ref": { "id": "requirement-extract", "version": "1.0.0" },
+    "variables": { "content": "系统需要支持手机号登录；登录失败 5 次后锁定 30 分钟。" }
+  }
+}

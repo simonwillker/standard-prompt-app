@@ -1,0 +1,6 @@
+{
+  "request": {
+    "template_ref": { "id": "meeting-minutes", "version": "1.0.0" },
+    "variables": { "content": "会议决定下周一发布新版，负责人是王明。" }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "registry_version": 1,
+  "templates": [
+    {
+      "id": "email-reply",
+      "version": "1.0.0",
+      "content_sha256": "0d7754c409b640656852582d4eb1fdaee7c7c41ab10815742e0db456527c96f0"
+    },
+    {
+      "id": "meeting-minutes",
+      "version": "1.0.0",
+      "content_sha256": "0957c6c7cc8c28a8abb4db3203c6713d7cf3d8d7a124a82dd38fed523d802cbf"
+    },
+    {
+      "id": "requirement-extract",
+      "version": "1.0.0",
+      "content_sha256": "ce34721573f69f35e4a3181fa45242aa19e590e9bc987b5a651ae74a73cc5b71"
+    }
+  ]
+}

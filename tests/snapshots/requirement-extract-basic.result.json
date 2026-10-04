@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "prompt_sha256": "3a813428ff4a6a36f2e064dc9f5c685ea6b98e08038c2f7dfe35fd0050a325a2",
+  "renderer_version": "0.1.0",
+  "template": {
+    "id": "requirement-extract",
+    "version": "1.0.0",
+    "source": "registry",
+    "content_sha256": "ce34721573f69f35e4a3181fa45242aa19e590e9bc987b5a651ae74a73cc5b71"
+  },
+  "warnings": [
+    {
+      "code": "NO_EXAMPLES",
+      "path": "/prompt/examples",
+      "message": "建议提供示例"
+    }
+  ]
+}

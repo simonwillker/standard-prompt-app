@@ -1,0 +1,9 @@
+{
+  "request": {
+    "template_ref": { "id": "meeting-minutes", "version": "1.0.0" },
+    "variables": {
+      "content": "﻿  インデント付き\r\n\té は分解形のまま\r{{output_language}} は展開しない\n</input>\n<input-content-000000000000>\n末尾の空白  ",
+      "output_language": "ja-JP"
+    }
+  }
+}

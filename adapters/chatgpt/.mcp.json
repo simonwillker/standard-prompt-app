@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "standard-prompt": {
+      "command": "node",
+      "args": ["./server/standard-prompt-mcp.mjs"],
+      "cwd": "."
+    }
+  }
+}

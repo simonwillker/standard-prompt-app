@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "prompt_sha256": "1dfe110a9c62fcdb7a453a9304947132f2d6436a5f635eedabc00d44b853337e",
+  "renderer_version": "0.1.0",
+  "template": {
+    "id": "code-review-notes",
+    "version": "0.1.0",
+    "source": "provided",
+    "content_sha256": "474566a9a0abcfb8a17119f5b8f57c3bac899718e053e8275018315a4c767ef8"
+  },
+  "warnings": []
+}
